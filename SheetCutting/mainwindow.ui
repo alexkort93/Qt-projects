@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Автоматическая раскройка листа металла</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="cutterGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>0</y>
+      <width>300</width>
+      <height>110</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Раскройка листа</string>
+    </property>
+    <widget class="QComboBox" name="cutAlgoritmComboBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>45</y>
+       <width>260</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="cutAlgoritmLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>161</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>70</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Выберите алгоритм раскройки</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="cutPushButton">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>80</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Раскроить</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="sheetParametersGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>110</y>
+      <width>300</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Параметры листа металла</string>
+    </property>
+    <widget class="QPushButton" name="applySheetParametersPushButton">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>50</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Применить</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sheetWidthLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>20</y>
+       <width>70</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sheetHeightLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>20</y>
+       <width>70</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="sheetWidthLabel">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>35</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Длина</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="sheetHeightLabel">
+     <property name="geometry">
+      <rect>
+       <x>165</x>
+       <y>20</y>
+       <width>45</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ширина</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="productsTableGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>190</y>
+      <width>300</width>
+      <height>505</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Список изделий</string>
+    </property>
+    <widget class="QPushButton" name="productsTableAddPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Добавить</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="productsTableFindPushButton">
+     <property name="geometry">
+      <rect>
+       <x>105</x>
+       <y>20</y>
+       <width>90</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Поиск</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="productsTableDeletePushButton">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Удалить</string>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="productsTableWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>285</width>
+       <height>450</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>285</width>
+       <height>450</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::SolidLine</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="rowCount">
+      <number>0</number>
+     </property>
+     <property name="columnCount">
+      <number>3</number>
+     </property>
+     <column/>
+     <column/>
+     <column/>
+    </widget>
+   </widget>
+   <widget class="QGraphicsView" name="mainGraphicsView">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>5</y>
+      <width>965</width>
+      <height>690</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="mainWindowMenuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="saveCutAction"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <action name="saveCutAction">
+   <property name="text">
+    <string>Сохранить раскройку</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
