@@ -16,11 +16,10 @@ private:
     int productsAmount;
     int productsWidth;
     int productsHeight;
-    QString dialogTitle;
-    QString dialogGroupBoxName;
+
 
 public:
-    explicit ProductsInputDialog(QWidget *parent = nullptr, QString title = "Добавление изделий", QString groupBoxName = "Введите параметры для добавления", bool searchMode = false);
+    explicit ProductsInputDialog(QWidget *parent = nullptr);
 
     ~ProductsInputDialog();
 
@@ -35,7 +34,6 @@ private slots:
 
     void on_inputDialogButtonBox_rejected();
 
-    void on_searchPushButton_clicked();
 };
 
 #endif // PRODUCTSINPUTDIALOG_H

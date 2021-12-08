@@ -109,6 +109,9 @@
        <height>20</height>
       </rect>
      </property>
+     <property name="inputMask">
+      <string>99999</string>
+     </property>
     </widget>
     <widget class="QLineEdit" name="sheetHeightLineEdit">
      <property name="geometry">
@@ -118,6 +121,9 @@
        <width>70</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="inputMask">
+      <string>99999</string>
      </property>
     </widget>
     <widget class="QLabel" name="sheetWidthLabel">

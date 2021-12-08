@@ -6,11 +6,13 @@
 #include <QTextFormat>
 #include <QMessageBox>
 #include <QTableWidget>
-#include "cutter.h"
-#include "productsinputdialog.h"
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QFileDialog>
+
+#include "cutter.h"
+#include "productsinputdialog.h"
+#include "productssearchdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,22 +30,22 @@ private:
     int previousAmount;
     int previousWidth;
     int previousHeight;
+    int previousSearchAmount;
+    int previousSearchWidth;
+    int previousSearchHeight;
     QList<QRect> resCut;
     QGraphicsScene *mainScene;
 
-protected:
-    void keyPressEvent(QKeyEvent* keyEvent);
+protected:    
     void paintEvent(QPaintEvent *paintEvent);
 
 public:
     MainWindow(QWidget *parent = nullptr);    
     ~MainWindow();
 
-    void makeFirstExample();
-    void makeSecondExample();
-    void productsTableWidgetUpdate();
-
 private slots:
+    void keyPressEvent(QKeyEvent* keyEvent);
+
     void on_applySheetParametersPushButton_clicked();
 
     void on_productsTableAddPushButton_clicked();

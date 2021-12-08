@@ -29,17 +29,53 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 {
-    switch (keyEvent->key()) {
-    case Qt::Key_1:
-        if (keyEvent->modifiers() & Qt::ControlModifier) {
-            this->makeFirstExample();
+    if (keyEvent->modifiers() & Qt::ControlModifier) {
+        switch (keyEvent->key()) {
+        case Qt::Key_1: {
+            int rowOffset = 1;
+            //3 изделия 200х100
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("200")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("100")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
+            cutter.addProducts(200, 100, 3);
+            //2 изделия 100х70
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("100")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("2")));
+            cutter.addProducts(100, 70, 2);
+            //3 изделия 70х70
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
+            cutter.addProducts(70, 70, 3);
         }
-    case Qt::Key_2:
-        if (keyEvent->modifiers() & Qt::ControlModifier) {
-            this->makeSecondExample();
+        case Qt::Key_2: {
+            int rowOffset = 1;
+            //3 изделия 100х200
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("100")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("200")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
+            cutter.addProducts(100, 200, 3);
+            //3 изделия 70х100
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("100")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
+            cutter.addProducts(70, 100, 3);
+            //3 изделия 70х70
+            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
+            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
+            cutter.addProducts(70, 70, 3);
         }
-    default:
-        QWidget::keyPressEvent(keyEvent);
+            //default:
+            //QWidget::keyPressEvent(keyEvent);
+        }
     }
 }
 
@@ -48,8 +84,8 @@ void MainWindow::paintEvent(QPaintEvent *paintEvent)
     int centerX = ui->mainGraphicsView->width() / 2;
     int centerY = ui->mainGraphicsView->height() / 2;
     if(sheetPaint) {        
-        mainScene->clear();
-        mainScene->addRect(centerX - cutter.getSheetWidth() / 2, centerY - cutter.getSheetHeight() / 2, cutter.getSheetWidth(), cutter.getSheetHeight());
+        mainScene->clear();       
+        mainScene->addRect(centerX - cutter.getSheetWidth() / 2, centerY - cutter.getSheetHeight() / 2, cutter.getSheetWidth(), cutter.getSheetHeight(),QPen(Qt::black,3));
         sheetPaint = false;
     }
     if(prodPaint) {        
@@ -90,44 +126,61 @@ void MainWindow::on_productsTableAddPushButton_clicked()
     int amount = inputDialog.getProductsAmount();
     int productsWidth = inputDialog.getProductsWidth();
     int productsHeight = inputDialog.getProductsHeight();
-    if (amount != NULL) {
+    if (amount > 0) {
         ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
         ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(productsWidth)));
         ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 1, new QTableWidgetItem(QString::number(productsHeight)));
         ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 2, new QTableWidgetItem(QString::number(amount)));
-        cutter.addProducts(productsWidth, productsHeight, amount);
-        //productsTableWidgetUpdate();
+        cutter.addProducts(productsWidth, productsHeight, amount);        
     }    
 }
 
-
 void MainWindow::on_productsTableFindPushButton_clicked()
 {
-    ProductsInputDialog inputDialog(nullptr, "Поиск изделий", "Введите параметры для поиска", true);
-    inputDialog.exec();
+    ProductsSearchDialog searchDialog;
+    searchDialog.exec();
+    int lastSearchIndex = 0;
     int rowIndex = 0;
-    if(inputDialog.getProductsAmount()!= NULL) {
-        int amount = inputDialog.getProductsAmount();
+    if(searchDialog.getSearchAmount() > 0) {
+        int amount = searchDialog.getSearchAmount();
         QList<QTableWidgetItem*> searchList = ui->productsTableWidget->findItems(QString::number(amount), Qt::MatchExactly);
+        if(lastSearchIndex <= searchList.length() && searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt() == previousAmount) {
+            lastSearchIndex++;
+        } else {
+            lastSearchIndex = 0;
+        }
         if(!searchList.isEmpty()) {
-            rowIndex = searchList.at(0)->row();
+            rowIndex = searchList.at(lastSearchIndex)->row();
             ui->productsTableWidget->selectRow(rowIndex);
+            previousAmount = searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt();
         }
     }
-    else if(inputDialog.getProductsWidth()!= NULL) {
-        int productsWidth = inputDialog.getProductsWidth();
+    if(searchDialog.getSearchWidth() > 0) {
+        int productsWidth = searchDialog.getSearchWidth();
         QList<QTableWidgetItem*> searchList = ui->productsTableWidget->findItems(QString::number(productsWidth), Qt::MatchExactly);
+        if(lastSearchIndex <= searchList.length() && searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt() == previousWidth) {
+            lastSearchIndex++;
+        } else {
+            lastSearchIndex = 0;
+        }
         if(!searchList.isEmpty()) {
-            rowIndex = searchList.at(0)->row();
+            rowIndex = searchList.at(lastSearchIndex)->row();
             ui->productsTableWidget->selectRow(rowIndex);
+            previousWidth = searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt();
         }
     }
-    else if(inputDialog.getProductsHeight()!= NULL) {
-        int productsHeight = inputDialog.getProductsHeight();
+    if(searchDialog.getSearchHeight() > 0) {
+        int productsHeight = searchDialog.getSearchHeight();
         QList<QTableWidgetItem*> searchList = ui->productsTableWidget->findItems(QString::number(productsHeight), Qt::MatchExactly);
+        if(lastSearchIndex <= searchList.length() && searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt() == previousHeight) {
+            lastSearchIndex++;
+        } else {
+            lastSearchIndex = 0;
+        }
         if(!searchList.isEmpty()) {
-            rowIndex = searchList.at(0)->row();
+            rowIndex = searchList.at(lastSearchIndex)->row();
             ui->productsTableWidget->selectRow(rowIndex);
+            previousHeight = searchList.at(lastSearchIndex)->data(Qt::DisplayRole).toInt();
         }
     }
 }
@@ -140,30 +193,6 @@ void MainWindow::on_productsTableWidget_cellDoubleClicked(int row, int column)
     previousHeight = ui->productsTableWidget->item(row, 1)->text().toInt();
 }
 
-void MainWindow::productsTableWidgetUpdate()
-{
-    int amount = 0;
-    int width = 0;
-    int height = 0;
-    QList<QRect> prodList = cutter.getProducts();
-    width = prodList.begin()->width();
-    height = prodList.begin()->height();
-    ui->productsTableWidget->setRowCount(0);
-    foreach(QRect prod, prodList) {
-        if (prod.width() == width && prod.height() == height) {
-            amount++;
-        } else {
-            ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(width)));
-            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 1, new QTableWidgetItem(QString::number(height)));
-            ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - 1, 2, new QTableWidgetItem(QString::number(amount)));
-            width = prod.width();
-            height = prod.height();
-            amount = 0;
-        }
-    }
-}
-
 void MainWindow::on_productsTableWidget_cellChanged(int row, int column)
 {
     if (editMode) {
@@ -172,6 +201,7 @@ void MainWindow::on_productsTableWidget_cellChanged(int row, int column)
         int productsWidth = ui->productsTableWidget->item(row, 0)->text().toInt();
         int productsHeight = ui->productsTableWidget->item(row, 1)->text().toInt();
         cutter.addProducts(productsWidth, productsHeight, amount);
+        editMode = false;
     }
 }
 
@@ -179,11 +209,11 @@ void MainWindow::on_productsTableDeletePushButton_clicked()
 {
     int rowIndex = ui->productsTableWidget->currentRow();
     int amount = ui->productsTableWidget->item(rowIndex, 2)->text().toInt();
-    int productsWidth = ui->productsTableWidget->item(rowIndex, 0)->text().toInt();
+    int productsWidth = ui->productsTableWidget->item(rowIndex, 0)->text().toInt();    
     int productsHeight = ui->productsTableWidget->item(rowIndex, 1)->text().toInt();
+    qDebug() << "Deleting row " << rowIndex;
     ui->productsTableWidget->removeRow(rowIndex);
-    cutter.deleteProducts(productsWidth, productsHeight, amount);
-    //productsTableWidgetUpdate();
+    cutter.deleteProducts(productsWidth, productsHeight, amount);    
 }
 
 
@@ -202,53 +232,6 @@ void MainWindow::on_cutPushButton_clicked()
         prodPaint = true;
     }
     update();
-}
-
-void MainWindow::makeFirstExample()
-{
-    int rowOffset = 1;
-    //3 изделия 200х100
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString::number(200)));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString::number(100)));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString::number(3)));
-    cutter.addProducts(200, 100, 3);
-    //2 изделия 100х70
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("100")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("2")));
-    cutter.addProducts(70, 100, 2);
-    //3 изделия 70х70
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
-    cutter.addProducts(70, 70, 3);
-
-}
-
-void MainWindow::makeSecondExample()
-{
-    int rowOffset = 1;
-    //3 изделия 100х200
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString::number(200)));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString::number(100)));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString::number(3)));
-    cutter.addProducts(200, 100, 3);
-    //3 изделия 70х100
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("100")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
-    cutter.addProducts(70, 100, 2);
-    //3 изделия 70х70
-    ui->productsTableWidget->insertRow(ui->productsTableWidget->rowCount());
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 0, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 1, new QTableWidgetItem(QString("70")));
-    ui->productsTableWidget->setItem(ui->productsTableWidget->rowCount() - rowOffset, 2, new QTableWidgetItem(QString("3")));
-    cutter.addProducts(70, 70, 3);
 }
 
 void MainWindow::on_saveCutAction_triggered()

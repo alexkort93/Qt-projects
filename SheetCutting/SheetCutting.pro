@@ -12,16 +12,19 @@ SOURCES += \
     cutter.cpp \
     main.cpp \
     mainwindow.cpp \
-    productsinputdialog.cpp
+    productsinputdialog.cpp \
+    productssearchdialog.cpp
 
 HEADERS += \
     cutter.h \
     mainwindow.h \
-    productsinputdialog.h
+    productsinputdialog.h \
+    productssearchdialog.h
 
 FORMS += \
     mainwindow.ui \
-    productsinputdialog.ui
+    productsinputdialog.ui \
+    productssearchdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

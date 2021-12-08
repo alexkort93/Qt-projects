@@ -31,7 +31,6 @@ public:
 
     QList<QRect> cutBurkeHorizontal();
     QList<QRect> cutBurkeVertical();
-
 };
 
 #endif // CUTTER_H

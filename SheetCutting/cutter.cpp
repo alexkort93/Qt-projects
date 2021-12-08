@@ -41,31 +41,35 @@ const QList<QRect> &Cutter::getProducts() const
 
 void Cutter::deleteProducts(int width, int height, int amount)
 {
-    int count = 0;    
-    while(count != amount){
-        foreach(QRect rect, products) {
+    int count = 0;
+    foreach(QRect rect, products) {
+        if(count == amount) {
+            break;
+        } else {
             if(rect.width() == width && rect.height() == height) {
                 products.removeAt(products.indexOf(rect));
-                count++;
                 qDebug() << "Remove product: " << rect;
+                count++;
             }
-        }        
+        }
     }
 }
 
 bool Cutter::decreasingWidthComparsion(const QRect &r1, const QRect &r2)
 {
-    return r1.width() >= r2.width();
+    qDebug() << "Decr width: " << r1.width() << " with " << r2.width();
+    return r1.width() > r2.width();
 }
 
 bool Cutter::decreasingHeightComparsion(const QRect &r1, const QRect &r2)
 {
-    return r1.height() >= r2.height();
+    qDebug() << "Decr height: " << r1.height() << " with " << r2.height();
+    return r1.height() > r2.height();
 }
 
 QList<QRect> Cutter::cutBurkeHorizontal()
 {
-    //int sumWidth = 0;
+    int sumWidth = 0;
     QList<int> gap;
     QList<QRect> unplacedProducts = products;
     std::sort(unplacedProducts.begin(), unplacedProducts.end(), decreasingWidthComparsion);
@@ -105,9 +109,14 @@ QList<QRect> Cutter::cutBurkeHorizontal()
         if (ind > -1) {
             // place best fitting rectangle
             QRect newRect;
-            newRect.setRect(gap[coordY], coordY, unplacedProducts[ind].width(), unplacedProducts[ind].height());            
-            qDebug() << "Burke vertical: " << gap[coordY] << " | " << coordY <<  " | " << newRect;
-            placedProducts.push_back(newRect);
+            sumWidth = gap[coordY] + unplacedProducts[ind].width();
+            if (sumWidth <= sheetWidth) {
+                newRect.setRect(gap[coordY], coordY, unplacedProducts[ind].width(), unplacedProducts[ind].height());
+                qDebug() << "Burke vertical: " << gap[coordY] << " | " << coordY <<  " | " << newRect;
+                placedProducts.push_back(newRect);
+            } else {
+                break;
+            }
             // raise elements of array to appropriate height
             for (int j = coordY; j < coordY + unplacedProducts[ind].height(); j++) {
                 gap[j] += unplacedProducts[ind].width();
@@ -135,6 +144,7 @@ QList<QRect> Cutter::cutBurkeHorizontal()
 
 QList<QRect> Cutter::cutBurkeVertical()
 {
+    int sumHeight = 0;
     QList<int> gap;
     QList<QRect> unplacedProducts = products;
     std::sort(unplacedProducts.begin(), unplacedProducts.end(), decreasingHeightComparsion);
@@ -160,7 +170,7 @@ QList<QRect> Cutter::cutBurkeVertical()
             gapWidth++;
             i++;
         }
-        // find best fitting rectangle
+        // find best fitting rectangl
         int   ind = -1;
         qreal fit = 0.0;
         for (int j = 0; j < unplacedProducts.size(); j++) {
@@ -174,10 +184,15 @@ QList<QRect> Cutter::cutBurkeVertical()
         if (ind > -1) {
             // place best fitting rectangle
             QRect newRect;
-            newRect.setRect(coordX, sheetHeight - (gap[coordX] + unplacedProducts[ind].height()),
-                            unplacedProducts[ind].width(), unplacedProducts[ind].height());
-            qDebug() << "Burke horizontal: " << coordX << " | " << sheetHeight - (gap[coordX] + unplacedProducts[ind].height()) <<  " | " << newRect;
-            placedProducts.push_back(newRect);
+            sumHeight = sheetHeight - (gap[coordX] + unplacedProducts[ind].height());
+            if (sumHeight >= 0) {
+                newRect.setRect(coordX, sheetHeight - (gap[coordX] + unplacedProducts[ind].height()),
+                                unplacedProducts[ind].width(), unplacedProducts[ind].height());
+                qDebug() << "Burke vertical: " << coordX << " | " << sheetHeight - (gap[coordX] + unplacedProducts[ind].height()) <<  " | " << newRect;
+                placedProducts.push_back(newRect);
+            } else {
+                break;
+            }
             // raise elements of array to appropriate width
             for (int j = coordX; j < coordX + unplacedProducts[ind].width(); j++) {
                 gap[j] += unplacedProducts[ind].height();

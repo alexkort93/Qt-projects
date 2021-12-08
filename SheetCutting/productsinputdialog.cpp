@@ -2,18 +2,11 @@
 #include "ui_productsinputdialog.h"
 
 
-ProductsInputDialog::ProductsInputDialog(QWidget *parent, QString title, QString groupBoxName, bool searchMode) :
+ProductsInputDialog::ProductsInputDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ProductsInputDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle(title);
-    ui->productsInputGroupBox->setTitle(groupBoxName);
-    ui->searchPushButton->hide();
-    if(searchMode) {
-        ui->inputDialogButtonBox->hide();
-        ui->searchPushButton->show();
-    }
 }
 
 int ProductsInputDialog::getProductsAmount() const
@@ -63,26 +56,8 @@ void ProductsInputDialog::on_inputDialogButtonBox_accepted()
 
 void ProductsInputDialog::on_inputDialogButtonBox_rejected()
 {
-    productsAmount = NULL;
-    productsWidth = NULL;
-    productsHeight = NULL;
+    productsAmount = 0;
+    productsWidth = 0;
+    productsHeight = 0;
     this->close();
 }
-
-
-void ProductsInputDialog::on_searchPushButton_clicked()
-{
-    if (!ui->productsAmountLineEdit->text().isEmpty()) {
-        productsAmount = ui->productsAmountLineEdit->text().toInt();
-        this->close();
-    }
-    if (!ui->productsWidthLineEdit->text().isEmpty()) {
-        productsWidth = ui->productsWidthLineEdit->text().toInt();
-        this->close();
-    }
-    if (!ui->productsHeightLineEdit->text().isEmpty()) {
-        productsHeight = ui->productsHeightLineEdit->text().toInt();
-        this->close();
-    }
-}
-
